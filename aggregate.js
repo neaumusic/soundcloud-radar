@@ -4,9 +4,7 @@ if (document.readyState === "loading") {
     injectButtonsAndObserve();
 }
 
-window.users = {};
-window.runningTally = {};
-window.leaderBoard = {};
+const gatherLimit = 200; // this seems to be the current maximum
 
 async function injectButtonsAndObserve () {
     injectButtons();
@@ -79,28 +77,66 @@ function getTrackUrlFromToolbar (toolbar) {
 
 // --- aggregation --->
 
+const leaderboard = {};
 async function aggregateTrack (trackUrl) {
     const track = await apiResolve(trackUrl);
-    const reposters = await apiGetReposters(track.id, { limit: 200 });
-
-    const users = {};
+    const reposters = await apiGetReposters(track.id, { limit: gatherLimit });
 
     reposters.forEach(r => {
-        users[r.permalink_url] = r;
-        window.runningTally[r.permalink_url] = (window.runningTally[r.permalink_url] || 0) + 1;
+        leaderboard[r.permalink_url] = (leaderboard[r.permalink_url] || 0) + 1;
     });
 
-    window.users = {
-        ...window.users,
-        ...users,
-    };
+    showModal();
+}
 
-    window.leaderBoard = Object.entries(window.runningTally).reduce((leaderBoard, [permalink_url, count]) => {
-        if (!leaderBoard[count]) leaderBoard[count] = [];
-        leaderBoard[count].push(permalink_url);
-        return leaderBoard
-    }, {});
-    console.log(leaderBoard);
+const modal = document.createElement("div");
+modal.className = "soundcloud-radar-modal";
+modal.style.position = "fixed";
+modal.style.top = "10vh";
+modal.style.maxHeight = "80vh";
+modal.style.zIndex = "999999";
+modal.style.overflow = "auto";
+modal.style.left = "50%";
+modal.style.transform = "translate(-50%, 0px)";
+modal.style.background = "#3cf"
+modal.style.display = "none";
+modal.style.whiteSpace = "pre-wrap";
+document.body.appendChild(modal);
+
+window.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+        if (modal.style.display === "block") {
+            hideModal();
+        } else {
+            showModal();
+        }
+    }
+})
+function showModal () {
+    modal.innerHTML = "Leaderboard (Press ESC to toggle):";
+    modal.appendChild(
+        Object.entries(leaderboard)
+            .sort(([urlA, countA], [urlB, countB]) => countB - countA)
+            .reduce((container, [url, count]) => {
+                const listItem = document.createElement("div");
+                const span = document.createElement("span");
+                span.innerText = `${count}: `;
+                listItem.appendChild(span);
+                const link = document.createElement("a");
+                link.innerText = `${url}`;
+                link.style.color = "initial";
+                link.href = url;
+                link.target = "_blank";
+                listItem.appendChild(link);
+                container.appendChild(listItem);
+                return container;
+            }, document.createElement("div"))
+        );
+    modal.style.display = "block";
+}
+
+function hideModal () {
+    document.querySelector(".soundcloud-radar-modal").style.display = "none";
 }
 
 // --- auth --->
@@ -129,7 +165,7 @@ async function apiResolve (trackUrl) {
 async function apiGetReposters (trackId, params) {
     const response = await apiGetPathname(`/tracks/${trackId}/reposters`, params);
     const collection = response.collection;
-    if (response.next_href && window.confirm("Continue?")) {
+    if (response.next_href && window.confirm(`Gathered ${gatherLimit}; continue?`)) {
         await getAdditionalReposters(response, collection);
     }
     return collection.map(r => r);
@@ -141,7 +177,7 @@ async function apiGetReposters (trackId, params) {
         const additionalResponse = await apiGetPathname(pathname, searchParams);
         collection.push(...additionalResponse.collection);
         if (additionalResponse.next_href) {
-            if (window.confirm("Continue?")) {
+            if (window.confirm(`Gathered another ${gatherLimit}; continue?`)) {
                 await getAdditionalReposters(additionalResponse, collection);
             }
         };
