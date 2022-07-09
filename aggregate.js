@@ -62,10 +62,7 @@ function getTrackUrlFromToolbar (toolbar) {
 
     );
     if (!trackContainer) {
-        console.log("defaulting to href");
         return window.location.href;
-        // console.error("found no track container for toolbar", toolbar);
-        // return;
     }
 
     const trackLink = (
@@ -89,8 +86,8 @@ async function aggregateTrack (trackUrl) {
     const users = {};
 
     reposters.forEach(r => {
-        users[r.id] = r;
-        window.runningTally[r.id] = (window.runningTally[r.id] || 0) + 1;
+        users[r.permalink_url] = r;
+        window.runningTally[r.permalink_url] = (window.runningTally[r.permalink_url] || 0) + 1;
     });
 
     window.users = {
@@ -98,9 +95,9 @@ async function aggregateTrack (trackUrl) {
         ...users,
     };
 
-    window.leaderBoard = Object.entries(window.runningTally).reduce((leaderBoard, [id, count]) => {
+    window.leaderBoard = Object.entries(window.runningTally).reduce((leaderBoard, [permalink_url, count]) => {
         if (!leaderBoard[count]) leaderBoard[count] = [];
-        leaderBoard[count].push(window.users[id]);
+        leaderBoard[count].push(permalink_url);
         return leaderBoard
     }, {});
     console.log(leaderBoard);
