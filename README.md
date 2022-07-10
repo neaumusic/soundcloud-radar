@@ -8,13 +8,11 @@ Download and open the .zip, go to `chrome://extensions` and "Load Unpacked" to t
 Summary
 --
 
-Finds people who have reposted specific tracks. Way better than Spotify radio: more customizable, and with endless possibilities
-
-TLDR it's amazing to find people on the internet who know the same music
+Finds and tallies people who reposted chosen tracks
 
 <img width="477" src="./images/aggregate-button.png">
 
-Adds an "Aggregate" button on tracks to accumulate people who reposted them (200 at a time, don't abuse..)
+Adds an "Aggregate" button to tally users onto a leaderboard
 
 <img width="1173" src="./images/leaderboard-modal.png">
 
