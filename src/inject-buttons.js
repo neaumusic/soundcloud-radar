@@ -37,7 +37,7 @@ function getToolbarData () {
                 const trackUrl = trackLink.href;
                 if (!trackUrl) return toolbars;
 
-                toolbars.push({ toolbar, trackUrl });
+                toolbars.push({ type: "search", toolbar, trackUrl });
                 return toolbars;
             }
 
@@ -51,7 +51,7 @@ function getToolbarData () {
                 const trackUrl = trackLink.href;
                 if (!trackUrl) return toolbars;
 
-                toolbars.push({ toolbar, trackUrl });
+                toolbars.push({ type: "stream", toolbar, trackUrl });
                 return toolbars;
             }
 
@@ -63,7 +63,7 @@ function getToolbarData () {
                 const trackUrl = trackLink.href;
                 if (!trackUrl) return toolbars;
 
-                toolbars.push({ toolbar, trackUrl });
+                toolbars.push({ type: "likes & related", toolbar, trackUrl });
                 return toolbars;
             }
 
@@ -75,7 +75,7 @@ function getToolbarData () {
                 const trackUrl = trackLink.href;
                 if (!trackUrl) return toolbars;
 
-                toolbars.push({ toolbar, trackUrl });
+                toolbars.push({ type: "history", toolbar, trackUrl });
                 return toolbars;
             }
 
@@ -85,8 +85,24 @@ function getToolbarData () {
                 const hero = content.querySelector(".l-listen-hero");
                 if (!hero) return toolbars;
 
+                // hero playlist item
+                const trackItem = toolbar.closest(".trackItem");
+                if (trackItem) {
+                    const trackTitle = trackItem.querySelector("a.trackItem__trackTitle");
+                    if (trackTitle) {
+                        const trackUrl = trackTitle.href;
+                        toolbars.push({ type: "hero playlist item", toolbar, trackUrl });
+                        return toolbars;
+                    }
+                    return toolbars;
+                }
+
+                // hero single
+                const tracksSummary = hero.querySelector(".fullHero__tracksSummary");
+                if (tracksSummary) return toolbars;
+
                 const trackUrl = window.location.href;
-                toolbars.push({ toolbar, trackUrl });
+                toolbars.push({ type: "hero single", toolbar, trackUrl });
                 return toolbars;
             }
 
