@@ -65,7 +65,7 @@ function addKeyboardListener () {
     window.addEventListener("keydown", async e => {
         if (e.key === "Escape") {
             if (modal.style.display === "block") {
-                if (!e.metaKey) {
+                if (!e.metaKey && !e.ctrlKey) {
                     hideModal();
                 } else {
                     clearLeaderboard();
