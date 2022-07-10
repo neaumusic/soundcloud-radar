@@ -2,7 +2,6 @@ const path = require('path');
 
 const packageJson = require('./package.json');
 const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
-const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const RemoveFilesWebpackPlugin = require('remove-files-webpack-plugin');
 

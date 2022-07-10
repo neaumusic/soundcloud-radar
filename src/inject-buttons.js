@@ -1,27 +1,7 @@
-import { aggregateRepostersByTrackUrl } from "./aggregate";
+import { aggregate } from "./aggregate";
+import { showModal } from "./modal";
 
-export async function injectButtonsAndObserve () {
-    // injectButtons();
-    observe();
-}
-
-function observe () {
-    const observer = new MutationObserver((mutations, observer) => {
-        one: for (let mutation of mutations) {
-            two: for (let elem of mutation.addedNodes) {
-                injectButtons();
-                break one;
-            }
-        }
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
-}
-
-function injectButtons () {
+export function injectButtons () {
     const toolbarData = getToolbarData();
 
     toolbarData.forEach(({ toolbar, trackUrl }) => {
@@ -29,16 +9,17 @@ function injectButtons () {
         if (!favoriteButton) return;
 
         const aggregateButton = favoriteButton.cloneNode(false);
-              aggregateButton.classList.remove("sc-button-like");
-              aggregateButton.classList.remove("sc-button-selected");
-              aggregateButton.classList.add("aggregate-button")
-              aggregateButton.innerText = "Aggregate";
-              aggregateButton.title = "Aggregate";
-              aggregateButton.addEventListener("click", async () => {
-                  aggregateButton.classList.add("sc-button-selected");
-                  await aggregateRepostersByTrackUrl(trackUrl);
-                  aggregateButton.classList.remove("sc-button-selected");
-              });
+        aggregateButton.classList.remove("sc-button-like");
+        aggregateButton.classList.remove("sc-button-selected");
+        aggregateButton.classList.add("aggregate-button")
+        aggregateButton.innerText = "Aggregate";
+        aggregateButton.title = "Aggregate";
+        aggregateButton.addEventListener("click", async () => {
+            aggregateButton.classList.add("sc-button-selected");
+            await aggregate(trackUrl);
+            await showModal();
+            aggregateButton.classList.remove("sc-button-selected");
+        });
 
         favoriteButton.parentNode.appendChild(aggregateButton);
     });
