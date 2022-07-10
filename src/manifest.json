@@ -1,12 +1,15 @@
 {
   "manifest_version": 3,
-  "version": "1.0",
+  "version": "${PACKAGE_VERSION}",
   "name": "Soundcloud Radar",
-  "description": "finds people who most commonly reposted specific tracks",
+  "description": "${PACKAGE_DESCRIPTION}",
   "content_scripts": [
     {
       "matches": ["*://*.soundcloud.com/*"],
-      "js": ["aggregate.js"]
+      "js": ["main.js"]
     }
+  ],
+  "permissions": [
+    "storage"
   ]
 }

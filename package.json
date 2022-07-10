@@ -1,0 +1,24 @@
+{
+  "name": "soundcloud-radar",
+  "description": "finds people who most commonly favorited/reposted specific tracks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist; webpack --config webpack.config.js",
+    "postinstall": "rm -rf dist; webpack --config webpack.config.js",
+    "watch": "rm -rf dist; webpack --watch --config webpack.config.js"
+  },
+  "repository": "https://github.com/neaumusic/soundcloud-radar.git",
+  "author": "neaumusic <jsw.james.wilson@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.18.6",
+    "babel-loader": "^8.2.5",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "remove-files-webpack-plugin": "^1.5.0",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
