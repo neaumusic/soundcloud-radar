@@ -5,7 +5,7 @@ export async function aggregate (trackUrl) {
     const track = await apiGetTrackByUrl(trackUrl);
 
     const shouldContinue = await new Promise(resolve => {
-        if (track.reposts_count > 200) {
+        if (track.reposts_count > gatherLimitPerRequest) {
             if (window.confirm(`
                 Track has ${track.reposts_count} reposters.
                 This will consume ${Math.ceil(track.reposts_count/gatherLimitPerRequest)} network requests.
