@@ -3,7 +3,7 @@ export const gatherLimitPerRequest = 200;
 // --- auth --->
 
 function getOAuthToken () {
-    const cookies = Object.fromEntries(new URLSearchParams(document.cookie.replace("; ", "&")));
+    const cookies = Object.fromEntries(new URLSearchParams(document.cookie.replace(/; /g, "&")));
     return cookies.oauth_token;
 }
 
