@@ -44,6 +44,8 @@ function getToolbarData () {
             // stream
             const soundListItem = toolbar.closest(".soundList__item");
             if (soundListItem) {
+                const playlist = soundListItem.querySelector(".playlist");
+                if (playlist) return toolbars;
                 const trackLink = soundListItem.querySelector("a.soundTitle__title");
                 if (!trackLink) return toolbars;
                 const trackUrl = trackLink.href;
